@@ -380,11 +380,6 @@ void SaveTerrainTriangulation(const std::string& str_terrain_name, TReal r_freq_
 	{
 		streamFile.seekg(0);
 		streamFile.clear();
-	#ifndef __MWERKS__
-		// MSL's stream classes do not need this behavior,
-		// and the function isn't implemented.
-		streamFile.ipfx(0);
-	#endif
 	}
 
 	//******************************************************************************************
@@ -534,9 +529,6 @@ void SaveTerrainTriangulation(const std::string& str_terrain_name, TReal r_freq_
 		double d_val = FLT_MAX;
 
 		streamFile >> d_val;
-	#ifndef __MWERKS__
-		streamFile.ipfx(0);
-	#endif
 
 		if (streamFile.fail() && !streamFile.eof())
 		{
