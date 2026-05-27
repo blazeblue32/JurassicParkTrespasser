@@ -1,0 +1,7 @@
+[submodule "jp2_pc/BuildTools/CMake"]
+	path = jp2_pc/BuildTools/CMake
+	url = https://github.com/blazeblue32/CMake.git
+[submodule "jp2_pc/gtest"]
+	path = jp2_pc/gtest
+	url = https://github.com/blazeblue32/googletest.git
+	branch = v1.17.x
