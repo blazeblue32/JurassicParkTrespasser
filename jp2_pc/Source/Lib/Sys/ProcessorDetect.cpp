@@ -46,35 +46,27 @@
 // If the DLL proves to be a problem then meybe we could move the DLL code into this class
 // but that would mean keeping it around for the whole game which is pointless.
 //
+//**********************************************************************************************
+// Completely bypass the processor.dll and cpu check entirely
+//
+//
 CCPUDetect::CCPUDetect()
 {
-	HINSTANCE	h_lib = NULL;
-	CPUFUNC		func;
-	bool		b_res;
-	
-	bLoaded = false;
+	memset(&cpuCPUInfo, 0, sizeof(cpuCPUInfo));
 
-	// load from the current directory
-	h_lib = LoadLibrary("processor.dll");
+	bLoaded = true;
 
-	if (h_lib)
-	{
-		func=(CPUFUNC)GetProcAddress(h_lib,"bGetProcessorInfo");
-		if (func)
-		{
-			b_res = func(&cpuCPUInfo);
-			if (b_res)
-			{
-				bLoaded = true;
-			}
-		}
-	}
+	// Pretend we detected a modern PentiumPro-compatible CPU.
+	cpuCPUInfo.cpufamProcessorFamily = (ECPUFamily)6;
 
-	// unload the DLL if we managed to load it
-	if (h_lib)
-	{
-		FreeLibrary(h_lib);
-	}
+	cpuCPUInfo.u4CPUFlags =
+		CPU_CPUID |
+		CPU_MMX |
+		CPU_PENTIUM |
+		CPU_PENTIUMPRO;
+
+	// Arbitrary modern CPU speed.
+	cpuCPUInfo.u4CPUSpeed = 3000;
 }
 
 

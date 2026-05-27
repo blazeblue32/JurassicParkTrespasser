@@ -339,27 +339,11 @@ void TrespassExceptionCleanup()
     ExitProcess(0);
 }
 
-
-
-
+// Replaced disk space check
 bool ValidateDiskSpace(int iMB)
 {
-    char szPath[_MAX_PATH] = { '\0' };
-    GetFileLoc(FA_INSTALLDIR, szPath, sizeof(szPath));
-    
-    const auto diskstat = std::filesystem::space(szPath);
-    
-    //Existing swp files count as free space
-    std::uintmax_t swpFilesSize = 0;
-    for (const auto& entry : std::filesystem::directory_iterator("."))
-        if (entry.is_regular_file() && entry.path().extension() == ".swp")
-            swpFilesSize += entry.file_size();
-    
-    const std::uintmax_t neededBytes = iMB * static_cast<std::uintmax_t>(1024 * 1024);
-    return diskstat.free + swpFilesSize > neededBytes;
+    return true;
 }
-
-
 
 
 //+--------------------------------------------------------------------------
@@ -424,12 +408,14 @@ int DoWinMain(HINSTANCE hInstance,
     //
     // Check To see if the installed registry flag is set.  If it has not been
     // set then we haven't been installed.
-    //
-    if (!GetRegValue(REG_KEY_INSTALLED, FALSE))
-    {
-        ErrorDlg(g_hwnd, IDS_NOT_INSTALLED);
-        goto Error;
-    }
+    // 
+    // DISABLED - not needed
+    // 
+    //if (!GetRegValue(REG_KEY_INSTALLED, FALSE))
+    //{
+    //    ErrorDlg(g_hwnd, IDS_NOT_INSTALLED);
+    //    goto Error;
+    //}
 
 	// Check existance of file system
 CheckFS:
@@ -439,8 +425,8 @@ CheckFS:
         GetFileLoc(FA_DATADRIVE, sz, sizeof(sz));
         strcat(sz, "menu\\tpassintro.smk");
 
-        // This should be the unique file on the disk
-        if (GetFileAttributes(sz) == (DWORD)-1)
+        // This should be the unique file on the disk - DISABLED
+        if (false)
         {
             GetRegString(REG_KEY_DATA_DRIVE, sz, sizeof(sz), "");
 
